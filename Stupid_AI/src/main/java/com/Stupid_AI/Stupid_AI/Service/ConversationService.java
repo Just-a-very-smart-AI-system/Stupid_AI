@@ -17,13 +17,13 @@ public class ConversationService {
     private ConversationRepository conversationRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     // Thêm mới một cuộc trò chuyện
     public ConversationEntity addConversation(Integer userId, ConversationEntity conversation) {
-        Optional<UserEntity> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            conversation.setUser(user.get());
+        UserEntity user = userService.getUserById(userId);
+        if (user != null) {
+            conversation.setUser(user);
             return conversationRepository.save(conversation);
         } else {
             throw new RuntimeException("User not found");
@@ -36,8 +36,8 @@ public class ConversationService {
     }
 
     // Lấy cuộc trò chuyện theo ID
-    public Optional<ConversationEntity> getConversationById(Long id) {
-        return conversationRepository.findById(id);
+    public ConversationEntity getConversationById(Long id) {
+        return conversationRepository.findById(id).orElseThrow(() -> new RuntimeException("Khong co Id"));
     }
 
     // Xóa cuộc trò chuyện

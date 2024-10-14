@@ -35,13 +35,9 @@ public class ConversationController {
 
     // Lấy cuộc trò chuyện theo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<ConversationEntity>> getConversationById(@PathVariable Long id) {
-        Optional<ConversationEntity> conversation = conversationService.getConversationById(id);
-        if (conversation.isPresent()) {
-            return ResponseEntity.ok(conversation);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ConversationEntity getConversationById(@PathVariable Long id) {
+        ConversationEntity conversation = conversationService.getConversationById(id);
+        return conversation;
     }
 
     // Xóa cuộc trò chuyện

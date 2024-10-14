@@ -1,7 +1,6 @@
 package com.Stupid_AI.Stupid_AI.Service;
 import com.Stupid_AI.Stupid_AI.Entity.ConversationEntity;
 import com.Stupid_AI.Stupid_AI.Entity.MessageEntity;
-import com.Stupid_AI.Stupid_AI.Repository.ConversationRepository;
 import com.Stupid_AI.Stupid_AI.Repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,17 +15,23 @@ public class MessageService {
     private MessageRepository messageRepository;
 
     @Autowired
-    private ConversationRepository conversationRepository;
+    private ConversationService conversationService;
+    @Autowired
+    private ApiService apiService;
 
     // Thêm mới một tin nhắn
-    public MessageEntity addMessage(Long conversationId, MessageEntity message) {
-        Optional<ConversationEntity> conversation = conversationRepository.findById(conversationId);
-        if (conversation.isPresent()) {
-            message.setConversation(conversation.get());
-            return messageRepository.save(message);
+    public MessageEntity addMessage(Long conversationId, String quest) {
+        MessageEntity message = new MessageEntity();
+        ConversationEntity conversation = conversationService.getConversationById(conversationId);
+        if (conversation != null) {
+            String ans = apiService.callChatCompletions(quest);
+            message.setQues(quest);
+            message.setAns(ans);
+            message.setConversation(conversation);
         } else {
             throw new RuntimeException("Conversation not found");
         }
+        return messageRepository.save(message);
     }
 
     // Lấy tất cả tin nhắn

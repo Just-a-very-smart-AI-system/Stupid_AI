@@ -20,8 +20,8 @@ public class MessageController {
     @PostMapping("/add/{conversationId}")
     public ResponseEntity<MessageEntity> addMessage(
             @PathVariable Long conversationId,
-            @RequestBody MessageEntity message) {
-        MessageEntity createdMessage = messageService.addMessage(conversationId, message);
+            @RequestBody String quest) {
+        MessageEntity createdMessage = messageService.addMessage(conversationId, quest);
         return ResponseEntity.ok(createdMessage);
     }
 

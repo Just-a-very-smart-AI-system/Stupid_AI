@@ -32,12 +32,12 @@ public class UserController {
 
     // Lấy người dùng theo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<UserEntity>> getUserById(@PathVariable int id) {
-        Optional<UserEntity> user = userService.getUserById(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user);
+    public UserEntity getUserById(@PathVariable int id) {
+        UserEntity user = userService.getUserById(id);
+        if (user != null) {
+            return user;
         } else {
-            return ResponseEntity.notFound().build();
+            return null ;
         }
     }
 

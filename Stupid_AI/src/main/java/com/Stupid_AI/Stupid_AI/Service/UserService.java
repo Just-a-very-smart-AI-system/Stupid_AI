@@ -25,8 +25,8 @@ public class UserService {
     }
 
     // Tìm người dùng theo ID
-    public Optional<UserEntity> getUserById(int id) {
-        return userRepository.findById(id);
+    public UserEntity getUserById(int id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Khong co Id"));
     }
 
     // Sửa thông tin người dùng
