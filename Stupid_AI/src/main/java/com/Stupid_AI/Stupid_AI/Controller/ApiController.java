@@ -1,6 +1,6 @@
 package com.Stupid_AI.Stupid_AI.Controller;
 
-import com.Stupid_AI.Stupid_AI.DTO.Choice;
+import com.Stupid_AI.Stupid_AI.DTO.Chat;
 import com.Stupid_AI.Stupid_AI.Service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +13,11 @@ public class ApiController {
     private ApiService apiService;
 
     @PostMapping("/chat")
-    public String chat(@RequestBody String prompt) {
-        String ans = apiService.callChatCompletions(prompt);
-        return ans;
+    public Object chat(@RequestBody String prompt) {
+        return apiService.callChatCompletions(prompt);
     }
 
-        @PostMapping("/completions")
+    @PostMapping("/completions")
     public String completions(@RequestBody String prompt) {
         return apiService.callCompletions(prompt);
     }

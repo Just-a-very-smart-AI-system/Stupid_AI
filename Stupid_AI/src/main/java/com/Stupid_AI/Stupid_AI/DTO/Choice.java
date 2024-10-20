@@ -6,6 +6,9 @@ import lombok.Data;
 public class Choice {
     private int index;
     private question message;
+<<<<<<< HEAD
     private String text;
+=======
+>>>>>>> origin/master
     private String finish_reason;
 }

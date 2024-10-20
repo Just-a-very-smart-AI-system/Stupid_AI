@@ -1,12 +1,12 @@
 package com.Stupid_AI.Stupid_AI.Service;
 
-import com.Stupid_AI.Stupid_AI.DTO.*;
-import com.Stupid_AI.Stupid_AI.DTO.Request.ChatRequest;
-import com.Stupid_AI.Stupid_AI.DTO.Request.CompleteRequest;
-import com.Stupid_AI.Stupid_AI.DTO.Response.ChatResponse;
-import com.Stupid_AI.Stupid_AI.DTO.Response.CompleteResponse;
+import com.Stupid_AI.Stupid_AI.DTO.Chat;
+import com.Stupid_AI.Stupid_AI.DTO.mess;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,7 +33,8 @@ public class ApiService {
         // Gọi API
         return restTemplate.exchange(url, HttpMethod.GET, requestEntity, Object.class).getBody();
     }
-    public String callChatCompletions(String prompt) {
+    // Gọi API /v1/chat/completions
+    public Object callChatCompletions(String prompt) {
         String url = BASE_URL + "/v1/chat/completions";
 
         // Tạo headers
@@ -41,27 +42,22 @@ public class ApiService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // Tạo body với các trường cần thiết
-        ChatRequest requestBody = new ChatRequest();
+        Chat requestBody = new Chat();
         requestBody.setMax_token(100);
         requestBody.setModel("llama-3.2-1b-instruct");
-        question system = new question("system", "You are a helpful assistant.");
-        question user = new question("user", prompt);
-        List<question> messes = new ArrayList<>();
+        mess system = new mess("system", "You are a helpful assistant.");
+        mess user = new mess("user", prompt);
+        List<mess> messes = new ArrayList<>();
         messes.add(system);
         messes.add(user);
         requestBody.setMessages(messes);
-        requestBody.setTemperature(0.7);
+        requestBody.setTemperature(1);
 
-        HttpEntity<ChatRequest> requestEntity = new HttpEntity<>(requestBody, headers);
+        HttpEntity<Chat> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        // Gọi API và ánh xạ JSON response vào ChatResponse
-        ResponseEntity<ChatResponse> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ChatResponse.class);
-        List<Choice> choices = response.getBody().getChoices();
-        Choice choice =  choices.stream().toList().getFirst();
-        return choice.getMessage().getContent();
+        // Gọi API
+        return restTemplate.exchange(url, HttpMethod.POST, requestEntity, Object.class).getBody();
     }
-
-    // Gọi API /v1/chat/completions
 
 
     // Gọi API /v1/completions
@@ -71,21 +67,11 @@ public class ApiService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        CompleteRequest requestBody = new CompleteRequest();
-        requestBody.setModel("llama-3.1-8b-instruct");
-        requestBody.setN(1);
-        requestBody.setStop("\n");
-        requestBody.setPrompt(prompt);
-        requestBody.setStream(false);
-        requestBody.setMax_tokens(50);
-        requestBody.setTop_p(1);
-        requestBody.setTemperature(1.0);
+        String requestBody = "{ \"prompt\": \"" + prompt + "\", \"max_tokens\": 50 }";
 
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        HttpEntity<CompleteRequest> requestEntity = new HttpEntity<>(requestBody, headers);
-
-        CompleteResponse quest =  restTemplate.exchange(url, HttpMethod.POST, requestEntity, CompleteResponse.class).getBody();
-        return quest.getChoices().getFirst().getText();
+        return restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class).getBody();
     }
 
     // Gọi API /v1/embeddings
