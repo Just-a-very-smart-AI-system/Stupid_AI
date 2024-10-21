@@ -7,6 +7,7 @@ import com.Stupid_AI.Stupid_AI.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +21,11 @@ public class ConversationService {
     private UserService userService;
 
     // Thêm mới một cuộc trò chuyện
-    public ConversationEntity addConversation(Integer userId, ConversationEntity conversation) {
+    public ConversationEntity addConversation(Integer userId, String name) {
         UserEntity user = userService.getUserById(userId);
+        ConversationEntity conversation = new ConversationEntity();
+        conversation.setName(name);
+        conversation.setTimeChat(LocalDateTime.now());
         if (user != null) {
             conversation.setUser(user);
             return conversationRepository.save(conversation);

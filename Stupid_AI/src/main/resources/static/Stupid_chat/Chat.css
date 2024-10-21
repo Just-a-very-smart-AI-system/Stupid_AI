@@ -13,12 +13,29 @@ body{
     width: 20%;
     height: 670px;
     max-height: initial;
+    overflow-y: auto;
     background-color: rgb(23,23,23);
     margin: none;
     padding: none;
     font-size: 15px;
 }
+/* Tùy chỉnh thanh cuộn */
+.conversations::-webkit-scrollbar {
+    width: 8px; 
+}
 
+.conversations::-webkit-scrollbar-track {
+    background: rgb(33, 33, 33); /* Màu nền của thanh cuộn */
+}
+
+.conversations::-webkit-scrollbar-thumb {
+    background: rgb(100, 100, 100); /* Màu của thanh cuộn */
+    border-radius: 10px; /* Bo tròn các góc của thanh cuộn */
+}
+
+.conversations::-webkit-scrollbar-thumb:hover {
+    background: rgb(150, 150, 150); /* Màu của thanh cuộn khi hover */
+}
 .conversations .conver{
     cursor: pointer;
     display: flex;
@@ -67,6 +84,7 @@ body{
 .message{
     width: 75%;
     padding-left: 30px;
+    
 }
 .message .info{
     opacity: 80%;
@@ -77,23 +95,31 @@ body{
 .message .message_content{
     width: 100%;
     height: 520px;
+    overflow-y: auto;
 }
 .message_content .ques{
     justify-self: end;
     margin-right: 18%;
+    max-width: 60%;
+
 }
 .message_content .ques p{
     background-color: rgb(47,47,47);
-    padding: 15px 15px;
-    border-radius: 20px;
-    
+    padding: 10px 15px;
+    border-radius: 30px;
+    line-height: 1.5;
 }
 
 .message_content .ans{
     justify-self: start;
     margin-left: 18%;
+    max-width: 60%;
+    row-gap: 15px;
 }
-
+.message_content .ans p{
+    padding: 10px 10px;
+    line-height: 1.5;
+}
 
 .message .chat{
     display: flex;
@@ -134,4 +160,7 @@ body{
     cursor: pointer;
     align-self: center; /* Căn giữa biểu tượng với ô nhập văn bản */
     vertical-align: middle; /* Căn giữa theo chiều dọc */
+}
+.chat .icon_send:hover{
+    background-color: rgb(249, 247, 247);
 }

@@ -18,11 +18,12 @@ public class MessageController {
 
     // Thêm tin nhắn với câu hỏi và trả lời
     @PostMapping("/add/{conversationId}")
-    public ResponseEntity<MessageEntity> addMessage(
+    public String addMessage(
             @PathVariable Long conversationId,
             @RequestBody String quest) {
         MessageEntity createdMessage = messageService.addMessage(conversationId, quest);
-        return ResponseEntity.ok(createdMessage);
+
+        return createdMessage.getAns();
     }
 
     // Lấy tất cả tin nhắn
@@ -31,7 +32,10 @@ public class MessageController {
         List<MessageEntity> messages = messageService.getAllMessages();
         return ResponseEntity.ok(messages);
     }
-
+    @GetMapping("/conver/{id}")
+    public Iterable<MessageEntity> FindByConver(@PathVariable Long id){
+        return messageService.findByCover(id);
+    }
     // Lấy tin nhắn theo ID
     @GetMapping("/{id}")
     public ResponseEntity<Optional<MessageEntity>> getMessageById(@PathVariable Long id) {

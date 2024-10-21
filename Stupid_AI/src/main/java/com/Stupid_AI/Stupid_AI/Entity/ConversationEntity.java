@@ -1,9 +1,16 @@
 package com.Stupid_AI.Stupid_AI.Entity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "conversations")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ConversationEntity {
 
     @Id
@@ -17,29 +24,8 @@ public class ConversationEntity {
     @JoinColumn(name = "id_user", nullable = false)
     private UserEntity user;
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "name", nullable = true)
+    private String name;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getTimeChat() {
-        return timeChat;
-    }
-
-    public void setTimeChat(LocalDateTime timeChat) {
-        this.timeChat = timeChat;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
 }
 

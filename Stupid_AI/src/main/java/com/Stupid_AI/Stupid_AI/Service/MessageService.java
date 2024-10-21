@@ -1,6 +1,7 @@
 package com.Stupid_AI.Stupid_AI.Service;
 import com.Stupid_AI.Stupid_AI.Entity.ConversationEntity;
 import com.Stupid_AI.Stupid_AI.Entity.MessageEntity;
+import com.Stupid_AI.Stupid_AI.Repository.ConversationRepository;
 import com.Stupid_AI.Stupid_AI.Repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class MessageService {
     // Thêm mới một tin nhắn
     public MessageEntity addMessage(Long conversationId, String quest) {
         MessageEntity message = new MessageEntity();
+
         ConversationEntity conversation = conversationService.getConversationById(conversationId);
         if (conversation != null) {
             String ans = apiService.callChatCompletions(quest);
@@ -43,7 +45,9 @@ public class MessageService {
     public Optional<MessageEntity> getMessageById(Long id) {
         return messageRepository.findById(id);
     }
-
+    public Iterable<MessageEntity> findByCover(Long id){
+        return messageRepository.findAllByConversation_Id(id);
+    }
     // Xóa tin nhắn
     public void deleteMessage(Long id) {
         messageRepository.deleteById(id);

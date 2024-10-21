@@ -1,6 +1,5 @@
 package com.Stupid_AI.Stupid_AI.Controller;
 
-import com.Stupid_AI.Stupid_AI.DTO.Chat;
 import com.Stupid_AI.Stupid_AI.Service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
