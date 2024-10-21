@@ -6,6 +6,7 @@ import com.Stupid_AI.Stupid_AI.Repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class MessageService {
         MessageEntity message = new MessageEntity();
 
         ConversationEntity conversation = conversationService.getConversationById(conversationId);
+        conversation.setTimeChat(LocalDateTime.now());
         if (conversation != null) {
             String ans = apiService.callChatCompletions(quest);
             message.setQues(quest);

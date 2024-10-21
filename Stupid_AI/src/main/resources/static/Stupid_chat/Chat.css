@@ -97,6 +97,9 @@ body{
     height: 520px;
     overflow-y: auto;
 }
+.message .message_content::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn */
+}
 .message_content .ques{
     justify-self: end;
     margin-right: 18%;
