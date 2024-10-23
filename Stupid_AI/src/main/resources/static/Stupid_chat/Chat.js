@@ -7,8 +7,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let converId = 0;
 
+    // Ẩn nút sendButton khi bắt đầu
+    sendButton.style.display = "none";
+
     // Hàm để lấy tất cả các cuộc trò chuyện
     function loadConversations() {
+        // Thêm nút "New Chat" vào conver_today
+        const newChatDiv = document.createElement("div");
+        newChatDiv.classList.add("conver");
+        newChatDiv.innerHTML = `
+            <p class="newChat">New Chat</p>
+        `;
+        newChatDiv.addEventListener("click", function() {
+            // Logic để tạo cuộc trò chuyện mới
+            messageContent.innerHTML = "";
+            converId = 0;
+        });
+
+        todayContainer.appendChild(newChatDiv); 
         fetch("http://localhost:8080/conversations/all")
             .then(response => {
                 if (!response.ok) {
@@ -20,6 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 const today = new Date();
                 const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
                 const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+                
+                data.sort((a, b) => new Date(b.timeChat) - new Date(a.timeChat));
 
                 data.forEach(conversation => {
                     const conversationTime = new Date(conversation.timeChat);
@@ -41,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         beforeContainer.appendChild(converDiv);
                     }
                 });
+
             })
             .catch(error => console.error("Error fetching conversations:", error));
     }
@@ -63,11 +82,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 messages.forEach(message => {
                     const userDiv = document.createElement("div");
                     userDiv.classList.add("ques");
-                    userDiv.innerHTML = `<p>${message.ques}</p>`;
+                    userDiv.innerHTML = `<p>${formatText(message.ques)}</p>`;
 
                     const botDiv = document.createElement("div");
                     botDiv.classList.add("ans");
-                    botDiv.innerHTML = `<p>${message.ans}</p>`;
+                    botDiv.innerHTML = `<p>${formatText(message.ans)}</p>`;
 
                     messageContent.appendChild(userDiv);
                     messageContent.appendChild(botDiv);
@@ -80,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const prompt = inputField.value;
         if (prompt.trim() === "") return;
         console.log(prompt);
+        
         if (converId != 0) {
             getMess(converId, prompt);
         } else {
@@ -92,11 +112,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 <span class="ellipsis">...</span>
             `;
 
-            // converDiv.addEventListener("click", function () {
-            //     LoadConver(conversation.id);
-            // });
             todayContainer.appendChild(converDiv);
         }
+
+
     }
 
     function createConver(name, prompt) {
@@ -141,12 +160,24 @@ document.addEventListener("DOMContentLoaded", function () {
             const responseText = typeof data === 'string' ? data : data.message;
             const botDiv = document.createElement("div");
             botDiv.classList.add("ans");
-            botDiv.innerHTML = `<p>${responseText}</p>`;
+            botDiv.innerHTML = `<p>${formatText(responseText)}</p>`;
             messageContent.appendChild(botDiv);
+            // Cuộn xuống dưới
+            messageContent.scrollTop = messageContent.scrollHeight;
         })
         .catch(error => console.error("Error:", error));
     }
 
+    function formatText(input) {
+        // Thay thế ký tự xuống dòng bằng <br>
+        let formattedText = input.replace(/\n/g, '<br>');
+        
+        // Thay thế các cặp **...** bằng thẻ <strong> để in đậm
+        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        return formattedText;
+    }
+    
     function show_ques() {
         const ques = inputField.value;
         const userDiv = document.createElement("div");
@@ -155,12 +186,23 @@ document.addEventListener("DOMContentLoaded", function () {
         userDiv.classList.add("ques");
         userDiv.innerHTML = `<p>${ques}</p>`;
         messageContent.appendChild(userDiv);
+        // Cuộn xuống dưới
+        messageContent.scrollTop = messageContent.scrollHeight;
         inputField.value = ""; // Xóa trường sau khi gửi tin nhắn
     }
 
     sendButton.addEventListener("click", function () {
         sendMessage();
         show_ques();
+    });
+
+    inputField.addEventListener("input", function () {
+        // Hiển thị nút sendButton khi có nội dung trong inputField
+        if (inputField.value.trim() !== "") {
+            sendButton.style.display = "block"; // Hiển thị nút
+        } else {
+            sendButton.style.display = "none"; // Ẩn nút
+        }
     });
 
     inputField.addEventListener("keypress", function (event) {
