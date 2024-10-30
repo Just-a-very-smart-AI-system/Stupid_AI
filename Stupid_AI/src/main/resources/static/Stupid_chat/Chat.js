@@ -115,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
             todayContainer.appendChild(converDiv);
         }
 
-
     }
 
     function createConver(name, prompt) {
@@ -124,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(name) // Sử dụng key 'name'
+            body: JSON.stringify(name) 
         })
             .then(response => {
                 if (!response.ok) {
@@ -142,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function getMess(converId, prompt) {
         fetch(`http://localhost:8080/messages/add/${converId}`, {
-            method: "POST",
+            method: "POST", 
             headers: {
                 "Content-Type": "application/json"
             },
@@ -160,20 +159,39 @@ document.addEventListener("DOMContentLoaded", function () {
             const responseText = typeof data === 'string' ? data : data.message;
             const botDiv = document.createElement("div");
             botDiv.classList.add("ans");
-            botDiv.innerHTML = `<p>${formatText(responseText)}</p>`;
-            messageContent.appendChild(botDiv);
-            // Cuộn xuống dưới
-            messageContent.scrollTop = messageContent.scrollHeight;
+            botDiv.style.whiteSpace = "pre-wrap";
+            messageContent.appendChild(botDiv); // Thêm botDiv vào messageContent trước
+
+            // Hàm để hiện thị văn bản ra từ từ
+            function typeText(text, element, delay) {
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < text.length) {
+                        element.innerHTML = text.substring(0, index + 1);
+                        index++;
+                        // Cuộn xuống dưới
+                        messageContent.scrollTop = messageContent.scrollHeight;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, delay);
+            }
+
+            const formattedResponse = formatText(responseText);
+            typeText(formattedResponse, botDiv, 15); 
+
+            
         })
         .catch(error => console.error("Error:", error));
     }
 
     function formatText(input) {
-        // Thay thế ký tự xuống dòng bằng <br>
         let formattedText = input.replace(/\n/g, '<br>');
-        
-        // Thay thế các cặp **...** bằng thẻ <strong> để in đậm
         formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        formattedText = formattedText.replace(/__(.*?)__/g, '<u>$1</u>');
         
         return formattedText;
     }

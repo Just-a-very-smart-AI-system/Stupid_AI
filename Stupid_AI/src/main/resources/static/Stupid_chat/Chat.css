@@ -96,7 +96,7 @@ body{
     width: 100%;
     height: 520px; /* Chiều cao cố định */
     overflow-y: auto; /* Cho phép cuộn */
-    transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển động */
+    transition: transform 0.3s ease; 
 }
 .message .message_content::-webkit-scrollbar {
     display: none; /* Ẩn thanh cuộn */
